@@ -25,7 +25,7 @@ class Student(models.Model):
     YEAR_CHOICES = [
         ('FR', 'Freshman'),
         ('SO', 'Sophomore'),
-        ('JR', 'Junior'),
+        ('JR', 'Junior'), 
         ('SR', 'Senior'),
         ('GR', 'Graduate')
     ]
