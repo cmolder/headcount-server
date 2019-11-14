@@ -1,2 +1,2 @@
-# Don't track content of these files
-.vscode/
+# Don't include these folders
+/.vscode
