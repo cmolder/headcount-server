@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third party packages
     'rest_framework',
+    'corsheaders',
+
+    # Our packages
     'headcount_db',
 ]
 
@@ -56,6 +60,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Third party
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'headcount_api.urls'
@@ -127,3 +134,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',       # Port for React app on computer
+#     'http://localhost:8000',
+#     'http://localhost:19001',      # Port for Expo CLI bundler on computer
+#     'http://localhost:19002'       # Port for Expo CLI app on computer
+# )
+
