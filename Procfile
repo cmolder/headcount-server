@@ -1,1 +1,1 @@
-web: gunicorn headcount_api.wsgi --log-file -
+web: gunicorn headcount_api/headcount_api.wsgi --log-file -
