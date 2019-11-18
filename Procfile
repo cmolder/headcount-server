@@ -1,1 +1,1 @@
-web: cd headcount_server && gunicorn headcount_server.wsgi --log-file -
+web: gunicorn headcount_server.wsgi --log-file -
