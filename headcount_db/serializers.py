@@ -15,9 +15,6 @@ class ClassroomSeralizer(serializers.ModelSerializer):
             'class_code',
         )
 
-        
-
-
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
