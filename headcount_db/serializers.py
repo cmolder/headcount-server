@@ -13,6 +13,8 @@ class ClassroomSeralizer(serializers.ModelSerializer):
             'name',
             'professor',
             'class_code',
+            'students',
+            'active'
         )
 
 class StudentSerializer(serializers.ModelSerializer):
