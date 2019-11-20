@@ -9,22 +9,25 @@ class Classroom(models.Model):
     number     = models.CharField(max_length=5)   # i.e. 3193, 2074H
     name       = models.CharField(max_length=200) # i.e. "Programming Paradigms"
     professor  = models.CharField(max_length=200) # i.e. "Dr. John Doe", "Dr. Garret Gardenhire, Ph.D."
-    class_code = models.CharField(max_length=8, editable=False) # i.e. "A9BDX3" (randomly generated)
-    students   = models.ManyToManyField('Student')
+    class_code = models.CharField(max_length=6, editable=False, unique=True, null=True, default=None) # i.e. "A9BDX3" (randomly generated)
+    students   = models.ManyToManyField('Student', blank=True)
     active     = models.BooleanField(default=False) # Class code is generated when class is active
 
+    # A string representation of the model
     def __str__(self):
-        # A string representation of the model
-        return (self.department + " " + self.number + " " + self.name + " " + self.class_code)
+        if self.class_code is not None:
+            return (self.department + " " + self.number + " " + self.name + " " + self.class_code)
+        return (self.department + " " + self.number + " " + self.name + " (inactive)")
 
     def save(self, *args, **kwargs):
-
         if(self.active == False):
-            self.class_code = 'INACTIVE' # TODO is there a better way to do this?
-        elif(self.active == True and self.class_code == 'INACTIVE'):
+            self.class_code = None
+
+        elif(self.active == True and self.class_code == None):
             self.class_code = get_random_string(6).upper()
 
         return super(Classroom, self).save(*args, **kwargs)
+
 
 
 class Student(models.Model): 
@@ -44,6 +47,7 @@ class Student(models.Model):
 
     def __str__(self):
         return (self.name + " " + str(self.student_id) + " " + self.year)
+
 
 
 class AttendanceTransaction(models.Model):
