@@ -9,7 +9,7 @@ class Classroom(models.Model):
     number     = models.CharField(max_length=5)   # i.e. 3193, 2074H
     name       = models.CharField(max_length=200) # i.e. "Programming Paradigms"
     professor  = models.CharField(max_length=200) # i.e. "Dr. John Doe", "Dr. Garret Gardenhire, Ph.D."
-    class_code = models.CharField(max_length=6, editable=False) # i.e. "A9BDX3" (randomly generated)
+    class_code = models.CharField(max_length=8, editable=False) # i.e. "A9BDX3" (randomly generated)
     students   = models.ManyToManyField('Student')
     active     = models.BooleanField(default=False) # Class code is generated when class is active
 
