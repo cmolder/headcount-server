@@ -19,10 +19,16 @@ class ClassroomAdmin(admin.ModelAdmin):
 
     def make_active(self, request, queryset):
         queryset.update(active=True)
+        for item in queryset:
+            item.save()
+
     make_active.short_description = "Activate selected classes"
 
     def make_inactive(self, request, queryset):
         queryset.update(active=False)
+        for item in queryset:
+            item.save()
+
     make_inactive.short_description = "Deactivate selected classes"
 
 
