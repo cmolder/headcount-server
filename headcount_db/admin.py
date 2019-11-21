@@ -22,14 +22,14 @@ class ClassroomAdmin(admin.ModelAdmin):
         for item in queryset:
             item.save()
 
-    make_active.short_description = "Activate selected classes"
+    make_active.short_description = "Activate selected classrooms"
 
     def make_inactive(self, request, queryset):
         queryset.update(active=False)
         for item in queryset:
             item.save()
 
-    make_inactive.short_description = "Deactivate selected classes"
+    make_inactive.short_description = "Deactivate selected classrooms"
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -49,6 +49,11 @@ class AttendanceTransactionAdmin(admin.ModelAdmin):
     ]
 
     ordering = ['time']
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["student", "classroom", "time"]
+        return ["time"]
 
 
 # Register your models here.

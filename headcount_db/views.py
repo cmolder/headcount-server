@@ -1,11 +1,10 @@
 from django.shortcuts import render
 
 from rest_framework import generics
-from .models import Classroom
-from .models import Student
-from .serializers import ClassroomSeralizer, StudentSerializer
+from .models import *
+from .serializers import *
 
-# Create your views here.
+''' Classroom API views'''
 class ListClassroom(generics.ListCreateAPIView):
     serializer_class = ClassroomSeralizer
 
@@ -20,11 +19,13 @@ class ListClassroom(generics.ListCreateAPIView):
             queryset = queryset.filter(class_code = code)
         return queryset
 
-
 class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSeralizer
 
+
+
+''' Student API views '''
 class ListStudent(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
@@ -32,3 +33,14 @@ class ListStudent(generics.ListCreateAPIView):
 class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+
+
+''' Attendance transcation API views '''
+class ListAttendanceTransaction(generics.ListCreateAPIView):
+    queryset = AttendanceTransaction.objects.all()
+    serializer_class = AttendanceTransactionSerializer
+
+class DetailAttendanceTransaction(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AttendanceTransaction.objects.all()
+    serializer_class = AttendanceTransactionSerializer

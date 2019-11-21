@@ -9,4 +9,7 @@ urlpatterns = [
     
     path('student', views.ListStudent.as_view()),            # Gets all students in the database
     path('student/<int:pk>', views.DetailStudent.as_view()), # Gets student w/ provided Django ID
+
+    path('attendance', views.ListAttendanceTransaction.as_view()),            # Gets all attendance transactions in the database
+    path('attendance/<int:pk>', views.DetailAttendanceTransaction.as_view()), # Gets attendance transaction w/ provided Django ID
 ]

@@ -3,7 +3,9 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.validators import RegexValidator
 
-# Create your models here.
+''' 
+Classroom model 
+'''
 class Classroom(models.Model):
 
     ''' Classroom fields '''
@@ -23,7 +25,7 @@ class Classroom(models.Model):
         return (self.department + " " + self.number + " " + self.name + " (inactive)")
 
 
-    ''' Updates the class code upon save / queryset update of active '''
+    ''' Updates the class code upon being called (if it is necessary to do so) '''
     def update_class_code(self):
         if(self.active == False):
             self.class_code = None
@@ -39,7 +41,9 @@ class Classroom(models.Model):
 
 
 
-
+'''
+Student model
+'''
 class Student(models.Model): 
     YEAR_CHOICES = [
         ('FR', 'Freshman'),
@@ -51,20 +55,28 @@ class Student(models.Model):
 
     numeric = RegexValidator(r'^[0-9]*$', 'Only numeric student IDs (consisting of 0-9) are allowed.')
 
+
+    ''' Student fields '''
     student_id = models.CharField(max_length=9, validators=[numeric]) # Student ID
     name       = models.CharField(max_length=200)                     # First and last name
     year       = models.CharField(max_length=2, choices=YEAR_CHOICES, default='FR')
 
+
+    ''' String representation '''
     def __str__(self):
-        return (self.name + " " + str(self.student_id) + " " + self.year)
+        return (self.name + " " + self.student_id + " " + self.year)
 
 
 
+'''
+Attendance transaction model
+- Stores records of students marking themselves present in classes
+'''
 class AttendanceTransaction(models.Model):
-    student = models.OneToOneField('Student', on_delete=models.CASCADE)
-    classroom = models.OneToOneField('Classroom', on_delete=models.CASCADE)
-    time = models.DateTimeField(editable=False)
-
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)     # Student associated with attendance request
+    classroom = models.ForeignKey('Classroom', on_delete=models.CASCADE) # Classroom associated with attendance request (empty if inactive)
+    time = models.DateTimeField(editable=False)                          # Time of attendance request
+        
     def save(self, *args, **kwargs):
         # On creation, set the time field to current time
         if not self.id:

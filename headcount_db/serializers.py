@@ -1,7 +1,7 @@
 # headcount_db/serializers.py
 
 from rest_framework import serializers
-from .models import Classroom, Student
+from .models import Classroom, Student, AttendanceTransaction
 
 class ClassroomSeralizer(serializers.ModelSerializer):
     class Meta:
@@ -25,6 +25,16 @@ class StudentSerializer(serializers.ModelSerializer):
             'student_id',
             'name',
             'year',
+        )
+
+class AttendanceTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceTransaction
+        fields = (
+            'id',
+            'student',
+            'classroom',
+            'time'
         )
         
         
