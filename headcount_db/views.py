@@ -10,7 +10,7 @@ class ListClassroom(generics.ListCreateAPIView):
 
     def get_queryset(self):
         '''
-        Optional field (class_code) restricts the returned Classrooms to the one
+        class_code - (optional) restricts the returned Classrooms to the one
         with a the given six-digit class code
         '''
         queryset = Classroom.objects.all()
@@ -44,16 +44,15 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 
     def get_queryset(self):
         '''
-        Optional field (classroom) restricts the returned
+        classroom - (optional) restricts the returned
         attendance transactions to those associated with the Classroom
-        with the given Django ID.
+        with the given Django ID. [ NOT classroom's class_code!! ]
 
-        Optional field (student) restricts the returned
+        student - (optional) restricts the returned
         attendance transactions to those associated with the Student
         with the given Django ID. [ NOT student's student_id!! ]
 
-
-        Optional field (date) in form YEAR-MM-DD restricts the returned
+        date - (optional) in form YEAR-MM-DD restricts the returned
         attendance transactions to those that happened on said date.
         '''
         queryset  = AttendanceTransaction.objects.all()
@@ -61,10 +60,10 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         classroom = self.request.query_params.get('classroom', None)
         date      = self.request.query_params.get('date', None)
 
-        if classroom_id is not None:
+        if classroom is not None:
             queryset = queryset.filter(classroom__id = classroom)
 
-        if student_id is not None:
+        if student is not None:
             queryset = queryset.filter(student__id = student)
 
         if date is not None:
