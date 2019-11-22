@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 ''' 
 Classroom model 
@@ -73,15 +74,41 @@ Attendance transaction model
 - Stores records of students marking themselves present in classes
 '''
 class AttendanceTransaction(models.Model):
+
+    
+    ''' Classroom validator '''
+    def validate_classroom(classroom):
+        '''
+        Django Admin interface sends an integer representing classroom's
+        Django ID, so we need to parse it
+        ------
+        Django Rest API sends the actual Classroom object, so we can
+        directly parse the field
+        '''
+        if type(classroom) is int:
+            classroom = Classroom.objects.get(id = classroom) # Gets Classroom from provided ID
+
+        if type(classroom) is Classroom:
+            if classroom.active is not True:
+                raise ValidationError((f"{classroom} is not active"), params={'classroom': classroom})
+        else:
+            raise ValidationError(f"{classroom} is not of type Classroom or valid Django ID", params={'classroom': classroom})
+
+
+    ''' Attendance transaction fields '''
     student = models.ForeignKey('Student', on_delete=models.CASCADE)     # Student associated with attendance request
-    classroom = models.ForeignKey('Classroom', on_delete=models.CASCADE) # Classroom associated with attendance request (empty if inactive)
+    classroom = models.ForeignKey('Classroom', validators=[validate_classroom], on_delete=models.CASCADE) # Classroom associated with attendance request (empty if inactive)
     time = models.DateTimeField(editable=False)                          # Time of attendance request
         
+
+    ''' Actions to perform upon saving '''
     def save(self, *args, **kwargs):
         # On creation, set the time field to current time
         if not self.id:
             self.time = timezone.now()
         return super(AttendanceTransaction, self).save(*args, **kwargs)
 
+
+    ''' String representation '''
     def __str__(self):
         return (str(self.student.name) + " at " + str(self.classroom.name) + " on " + self.time.strftime("%m/%d/%y"))
