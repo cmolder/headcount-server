@@ -44,19 +44,28 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 
     def get_queryset(self):
         '''
-        Optional field (id) restricts the returned
+        Optional field (classroom) restricts the returned
         attendance transactions to those associated with the Classroom
         with the given Django ID.
+
+        Optional field (student) restricts the returned
+        attendance transactions to those associated with the Student
+        with the given Django ID. [ NOT student's student_id!! ]
+
 
         Optional field (date) in form YEAR-MM-DD restricts the returned
         attendance transactions to those that happened on said date.
         '''
-        queryset = AttendanceTransaction.objects.all()
-        django_id = self.request.query_params.get('id', None)
+        queryset  = AttendanceTransaction.objects.all()
+        student   = self.request.query_params.get('student', None)
+        classroom = self.request.query_params.get('classroom', None)
         date      = self.request.query_params.get('date', None)
 
-        if django_id is not None:
-            queryset = queryset.filter(classroom__id = django_id)
+        if classroom_id is not None:
+            queryset = queryset.filter(classroom__id = classroom)
+
+        if student_id is not None:
+            queryset = queryset.filter(student__id = student)
 
         if date is not None:
             queryset = queryset.filter(time__date = date)
