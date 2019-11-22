@@ -1,15 +1,18 @@
-#  headcount_db/urls.py
-
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('classroom', views.ListClassroom.as_view()),            # Gets all classrooms in the database
-    path('classroom/<int:pk>', views.DetailClassroom.as_view()), # Gets classroom w/ provided Django ID
+    # Classroom API endpoints
+    path('classroom', views.ListClassroom.as_view()),            # Gets all Classroom objects (with optional filters)
+    path('classroom/<int:pk>', views.DetailClassroom.as_view()), # Gets Classroom with provided Django ID
     
-    path('student', views.ListStudent.as_view()),            # Gets all students in the database
-    path('student/<int:pk>', views.DetailStudent.as_view()), # Gets student w/ provided Django ID
 
-    path('attendance', views.ListAttendanceTransaction.as_view()),            # Gets all attendance transactions in the database
-    path('attendance/<int:pk>', views.DetailAttendanceTransaction.as_view()), # Gets attendance transaction w/ provided Django ID
+    # Student API endpoints
+    path('student', views.ListStudent.as_view()),            # Gets all Student objects
+    path('student/<int:pk>', views.DetailStudent.as_view()), # Gets Student with provided Django ID
+
+
+    # Attendance transaction API endpoints
+    path('attendance', views.ListAttendanceTransaction.as_view()),            # Gets all AttendanceTransaction objects (with optional filters)
+    path('attendance/<int:pk>', views.DetailAttendanceTransaction.as_view()), # Gets AttendanceTransaction with provided Django ID
 ]
