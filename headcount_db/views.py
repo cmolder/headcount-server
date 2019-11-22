@@ -11,7 +11,7 @@ class ListClassroom(generics.ListCreateAPIView):
     def get_queryset(self):
         '''
         class_code - (optional) restricts the returned Classrooms to the one
-        with a the given six-digit class code
+        with the given six-digit class code
         '''
         queryset = Classroom.objects.all()
         code = self.request.query_params.get('class_code', None)
@@ -29,8 +29,20 @@ class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
 
 ''' Student API views '''
 class ListStudent(generics.ListCreateAPIView):
-    queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+    def get_queryset(self):
+        '''
+        class_code - (optional) restricts the returned Students to the one
+        with the given nine-digit student ID
+        '''
+        queryset = Student.objects.all()
+        student_id = self.request.query_params.get('student_id', None)
+
+        if student_id is not None:
+            queryset = queryset.filter(student_id = student_id)
+
+        return queryset
 
 class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
