@@ -33,7 +33,7 @@ class ListStudent(generics.ListCreateAPIView):
 
     def get_queryset(self):
         '''
-        class_code - (optional) restricts the returned Students to the one
+        student_id - (optional) restricts the returned Students to the one
         with the given nine-digit student ID
         '''
         queryset = Student.objects.all()

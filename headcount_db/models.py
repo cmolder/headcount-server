@@ -99,10 +99,9 @@ class AttendanceTransaction(models.Model):
     time = models.DateTimeField(editable=False)
         
 
-    ''' Validates the attendance transaction as a whole  '''
+    ''' Validates the attendance transaction as a whole '''
     def clean(self):
-        # If the student is not on the class roster, then the
-        # attendance transaction is not valid
+        # Check that the student is on the classroom's student roster.
         if self.student not in self.classroom.students.all():
             raise ValidationError((f"{self.student} is not on the roster for {self.classroom}"), 
                                   params={'student': self.student, 'classroom': self.classroom})

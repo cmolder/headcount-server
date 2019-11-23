@@ -28,6 +28,14 @@ class StudentSerializer(serializers.ModelSerializer):
         )
 
 class AttendanceTransactionSerializer(serializers.ModelSerializer):
+    
+    ''' Validates the attendance transaction as a whole '''
+    def validate(self, data):
+        # Check that the student is on the classroom's student roster.
+        if data['student'] not in data['classroom'].students.all():
+            raise serializers.ValidationError(f"{data['student']} is not on the roster for {data['classroom']}")
+        return data
+    
     class Meta:
         model = AttendanceTransaction
         fields = (
