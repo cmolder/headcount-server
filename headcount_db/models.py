@@ -37,8 +37,8 @@ class Classroom(models.Model):
     ''' String representation '''
     def __str__(self):
         if self.class_code is not None:
-            return (self.department + " " + self.number + " " + self.name + " " + self.class_code)
-        return (self.department + " " + self.number + " " + self.name + " (inactive)")
+            return (str(self.id) + " " + self.department + " " + self.number + " " + self.name + " " + self.class_code)
+        return (str(self.id) + " " + self.department + " " + self.number + " " + self.name + " (inactive)")
 
 
 
@@ -65,7 +65,7 @@ class Student(models.Model):
 
     ''' String representation '''
     def __str__(self):
-        return (self.name + " " + self.student_id + " " + self.year)
+        return (str(self.id) + " " + self.name + " " + self.student_id + " " + self.year)
 
 
 
@@ -118,4 +118,4 @@ class AttendanceTransaction(models.Model):
 
     ''' String representation '''
     def __str__(self):
-        return (str(self.student.name) + " at " + str(self.classroom.name) + " on " + self.time.strftime("%m/%d/%y"))
+        return (str(self.id) + " " + str(self.student.name) + " at " + str(self.classroom.name) + " on " + self.time.strftime("%m/%d/%y"))
