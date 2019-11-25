@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Classroom, Student, AttendanceTransaction
+from .models import *
 
 
 # Helps make the admin view much more clear
@@ -10,8 +10,8 @@ class ClassroomAdmin(admin.ModelAdmin):
         'number', 
         'name', 
         'professor', 
-        'class_code', 
-        'active'
+        'active',
+        'active_session',
     ]
 
     ordering = ['department', 'number']
@@ -42,22 +42,37 @@ class StudentAdmin(admin.ModelAdmin):
     ordering = ['student_id']
 
 class AttendanceTransactionAdmin(admin.ModelAdmin):
+    
     list_display = [
         'time',
         'student',
-        'classroom'
+        'session'
     ]
 
     ordering = ['time']
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["student", "classroom", "time"]
-        return ["time"]
+            return ['student', 'session', 'time']
+        return ['time']
+
+class ClassroomSessionAdmin(admin.ModelAdmin):
+    list_display = [
+        'class_code',
+        'classroom',
+        'start',
+        'end',
+    ]
+
+    ordering = ['class_code', 'classroom']
+
+    def get_readonly_fields(self, request, obj=None):
+        return ['classroom', 'start', 'end', 'class_code']
 
 
 # Register your models here.
 admin.site.register(Classroom, ClassroomAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(AttendanceTransaction, AttendanceTransactionAdmin)
+admin.site.register(ClassroomSession, ClassroomSessionAdmin)
     

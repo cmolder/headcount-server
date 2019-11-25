@@ -50,7 +50,7 @@ class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-''' Attendance transcation API views '''
+''' Attendance transaction API views '''
 class ListAttendanceTransaction(generics.ListCreateAPIView):
     serializer_class = AttendanceTransactionSerializer
 
