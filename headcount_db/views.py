@@ -6,24 +6,12 @@ from .serializers import *
 
 ''' Classroom API views'''
 class ListClassroom(generics.ListCreateAPIView):
-    serializer_class = ClassroomSeralizer
-
-    def get_queryset(self):
-        '''
-        class_code - (optional) restricts the returned Classrooms to the one
-        with the given six-digit class code
-        '''
-        queryset = Classroom.objects.all()
-        class_code = self.request.query_params.get('class_code', None)
-
-        if class_code is not None:
-            queryset = queryset.filter(class_code = class_code)
-
-        return queryset
-
-class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSeralizer
+
+class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ClassroomSeralizer
+    queryset = Classroom.objects.all()
 
 
 
@@ -45,8 +33,8 @@ class ListStudent(generics.ListCreateAPIView):
         return queryset
 
 class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    queryset = Student.objects.all()
 
 
 
@@ -57,19 +45,15 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
     def get_queryset(self):
         '''
         classroom - (optional) restricts the returned
-        attendance transactions to those associated with the Classroom
-        with the given Django ID. [ NOT classroom's class_code!! ]
-
-        class_code - (optional) restricts the returned
-        attendance transactions to those associated with the active Classroom
-        that currently has the given class code.
+        attendance transactions to those associated with sessions 
+        of Classroom with the given Django ID. [ NOT classroom's class_code!! ]
 
         student - (optional) restricts the returned
         attendance transactions to those associated with the Student
         with the given Django ID. [ NOT student's student_id!! ]
 
         student_id - (optional) restricts the returned
-        aatendance transactions to those associated with the Student
+        attendance transactions to those associated with the Student
         with the given nine-digit student id.
 
         date - (optional) in form YYYY-MM-DD restricts the returned
@@ -78,18 +62,12 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         queryset   = AttendanceTransaction.objects.all()
 
         classroom  = self.request.query_params.get('classroom', None)
-        class_code = self.request.query_params.get('class_code', None)
-
-        student    = self.request.query_params.get('student', None)
         student_id = self.request.query_params.get('student_id', None)
 
         date       = self.request.query_params.get('date', None)
 
         if classroom is not None:
-            queryset = queryset.filter(classroom__id = classroom)
-
-        if class_code is not None:
-            queryset = queryset.filter(classroom__class_code = class_code)
+            queryset = queryset.filter(session__classroom__id = classroom)
 
         if student is not None:
             queryset = queryset.filter(student__id = student)
@@ -102,7 +80,38 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 
         return queryset
 
-
 class DetailAttendanceTransaction(generics.RetrieveUpdateDestroyAPIView):
-    queryset = AttendanceTransaction.objects.all()
     serializer_class = AttendanceTransactionSerializer
+    queryset = AttendanceTransaction.objects.all()
+
+
+
+''' Classroom session API views '''
+class ListClassroomSession(generics.ListCreateAPIView):
+    serializer_class = ClassroomSessionSerializer
+
+    def get_queryset(self):
+        '''
+        classroom - (optional) restricts the returned classroom sessions
+        to those associtaed with the Classrooms with the given Django ID.
+
+        class_code - (optional) restricts the returned classroom sessions
+        to those with the given class code.
+        '''
+        
+        queryset = ClassroomSession.objects.all()
+
+        classroom = self.request.query_params.get('classroom', None)
+        class_code = self.request.query_params.get('class_code', None)
+
+        if classroom is not None:
+            queryset = queryset.filter(classroom__id = classroom)
+
+        if class_code is not None:
+            queryset = queryset.filter(class_code = class_code)
+
+        return queryset
+
+class DetailClassroomSession(generics.ListCreateAPIView):
+    serializer_class = ClassroomSessionSerializer
+    queryset = ClassroomSession.objects.all()

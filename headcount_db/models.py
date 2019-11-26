@@ -99,7 +99,7 @@ class AttendanceTransaction(models.Model):
                 raise ValidationError((f'{session} is no longer active'), 
                                     params={'session': session, 'classroom': session.classroom})
             elif session.classroom is None:
-                raise ValidationError((f'{session} is not associtaed with a classroom'),
+                raise ValidationError((f'{session} is not associated with a classroom'),
                                     params={'session': session, 'classroom': session.classroom})
         else:
             raise ValidationError(f'{session} is not of type ClassroomSession or valid Django ID', 
@@ -114,9 +114,9 @@ class AttendanceTransaction(models.Model):
 
     ''' Validates the attendance transaction as a whole '''
     def clean(self):
-        # Check that the student is on the classroom's student roster.
+        # Check that the student is on the session classroom's roster.
         if self.student not in self.session.classroom.students.all():
-            raise ValidationError((f"{self.student} is not on the roster for {self.session.classroom}"), 
+            raise ValidationError((f'{self.student} is not on the roster for {self.session.classroom}'), 
                                   params={'student': self.student, 'classroom': self.session.classroom})
 
 
