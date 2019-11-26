@@ -87,7 +87,7 @@ class DetailAttendanceTransaction(generics.RetrieveUpdateDestroyAPIView):
 
 
 ''' Classroom session API views '''
-class ListClassroomSession(generics.ListCreateAPIView):
+class ListClassroomSession(generics.ListAPIView):
     serializer_class = ClassroomSessionSerializer
 
     def get_queryset(self):
