@@ -12,24 +12,25 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import django_heroku
+import dj_database_url
+import dotenv
 
+
+''' Application definition '''
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'headcount-server.herokuapp.com']
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+# Load environment variables from .env file (local) or from online database (Heroku)
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z96qavo-q#^p1lmbna6y1xo7ll!dyj#=bjy&o!ygibbolu^u%b'
+SECRET_KEY = 'z96qavo-q#^p1lmbna6y1xo7ll!dyj#=bjy&o!ygibbolu^u%b'      
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['headcount-server.herokuapp.com']
-
-
-# Application definition
+DEBUG = True 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,21 +88,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'headcount_server.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = True
 
-# Database
+
+''' 
+Database 
+'''
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        
     }
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+DATABASES['default'] = dj_database_url.config(conn_max_age=600) # Use DATABASE_URL based on Heroku (online) or .env file (local)
 
+''' 
+Password validation 
+https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+'''
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -118,39 +125,43 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
+''' 
+Internationalization
+https://docs.djangoproject.com/en/2.2/topics/i18n/
+'''
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Chicago'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+''' 
+Static files (CSS, JavaScript, Images)
+https://docs.djangoproject.com/en/2.2/howto/static-files/
+'''
 PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
-# STATIC_ROOT  = os.path.join(PROJECT_ROOT, 'staticfiles')
-# STATIC_URL   = '/static/'
+STATIC_ROOT  = os.path.join(PROJECT_ROOT, 'static')
+STATIC_URL   = '/static/'
 
 # Extra lookup directories for collectstatic to find static files
-# STATICFILES_DIRS = (
-#     os.path.join(PROJECT_ROOT, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'staticfiles'),
+)
 
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = (
-#     'http://localhost:3000',       # Port for React app on computer
-#     'http://localhost:8000',
-#     'http://localhost:19001',      # Port for Expo CLI bundler on computer
-#     'http://localhost:19002'       # Port for Expo CLI app on computer
-# )
 
+'''
+Media files
+'''
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_URL  = '/media/'
+
+
+'''
+Miscellaneous
+'''
 django_heroku.settings(locals())
-
-import dj_database_url
-prod_db = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(prod_db)
+del DATABASES['default']['OPTIONS']['sslmode'] # SSL workaround when working locally
