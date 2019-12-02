@@ -14,7 +14,6 @@ class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classroom.objects.all()
 
 
-
 ''' Student API views '''
 class ListStudent(generics.ListCreateAPIView):
     serializer_class = StudentSerializer
@@ -36,6 +35,19 @@ class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializer
     queryset = Student.objects.all()
 
+
+''' Instructor API views '''
+class ListInstructor(generics.ListCreateAPIView):
+    serializer_class = InstructorSerializer
+
+    def get_queryset(self):
+        queryset = Instructor.objects.all()
+
+        return queryset
+
+class DetailInstructor(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = InstructorSerializer
+    queryset = Instructor.objects.all()
 
 
 ''' Attendance transaction API views '''
@@ -83,7 +95,6 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 class DetailAttendanceTransaction(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AttendanceTransactionSerializer
     queryset = AttendanceTransaction.objects.all()
-
 
 
 ''' Classroom session API views '''

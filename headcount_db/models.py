@@ -13,7 +13,8 @@ class Classroom(models.Model):
     department = models.CharField(max_length=4)   # i.e. CSCE, HIST
     number     = models.CharField(max_length=5)   # i.e. 3193, 2074H
     name       = models.CharField(max_length=200) # i.e. "Programming Paradigms"
-    professor  = models.CharField(max_length=200) # i.e. "Dr. John Doe", "Dr. Garret Gardenhire, Ph.D."
+    instructor = models.ForeignKey('Instructor', related_name='+', blank=True,
+                 null=True, default=None, on_delete = models.SET_DEFAULT)
     students   = models.ManyToManyField('Student', blank=True)
     active     = models.BooleanField(default=False) # When set to true, creates a new ClassroomSession
                                                     # When set to false, ends the Session and clears it from
@@ -74,6 +75,26 @@ class Student(models.Model):
     ''' String representation '''
     def __str__(self):
         return f'{self.id} {self.name} {self.student_id} {self.year}'
+
+
+'''
+Instructor model
+'''
+class Instructor(models.Model):
+    TITLE_CHOICES = [
+        ('MR', 'Mr.'),
+        ('MS', 'Ms.'),
+        ('MRS', 'Mrs.'),
+        ('DR', 'Dr.'),
+        ('PF', 'Professor'),
+        ('NONE', '')
+    ]
+
+    title = models.CharField(max_length=4, choices=TITLE_CHOICES, default='NONE')
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.title} {self.name}'
 
 
 

@@ -11,13 +11,13 @@ class ClassroomAdmin(admin.ModelAdmin):
         'department', 
         'number', 
         'name', 
-        'professor', 
+        'instructor', 
         'active',
         'active_session',
     ]
 
     list_filter = ['active', 'department']
-    search_fields = ['department', 'number', 'name', 'professor']
+    search_fields = ['department', 'number', 'name', 'instructor']
 
     ordering = ['department', 'number']
     actions = ['make_active', 'make_inactive']
@@ -49,6 +49,17 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['name', 'student_id']
 
     ordering = ['student_id']
+
+
+''' Instructor admin '''
+class InstructorAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'title',
+        'name'
+    ]
+
+    ordering = ['name']
 
 
 ''' Attendance transaction admin '''
@@ -109,6 +120,7 @@ class ClassroomSessionAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Classroom, ClassroomAdmin)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(Instructor, InstructorAdmin)
 admin.site.register(AttendanceTransaction, AttendanceTransactionAdmin)
 admin.site.register(ClassroomSession, ClassroomSessionAdmin)
     

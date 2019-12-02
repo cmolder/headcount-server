@@ -27,6 +27,15 @@ class StudentSerializer(serializers.ModelSerializer):
             'year',
         )
 
+class InstructorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Instructor
+        fields = (
+            'user',
+            'name',
+            'title'
+        )
+
 class AttendanceTransactionSerializer(serializers.ModelSerializer):
     
     ''' Validates the attendance transaction as a whole '''
