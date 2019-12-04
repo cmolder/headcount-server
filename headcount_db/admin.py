@@ -43,7 +43,7 @@ class StudentAdmin(admin.ModelAdmin):
         'student_id',
         'name',
         'year',
-        'user'
+        #'user'
     ]
 
     list_filter   = ['year']
@@ -57,7 +57,7 @@ class InstructorAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'name',
-        'user'
+        #'user'
     ]
 
     ordering      = ['name']
