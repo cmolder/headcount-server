@@ -3,7 +3,7 @@
 from rest_framework import serializers
 from .models import *
 
-class ClassroomSeralizer(serializers.ModelSerializer):
+class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = (
@@ -11,7 +11,7 @@ class ClassroomSeralizer(serializers.ModelSerializer):
             'department',
             'number',
             'name',
-            'professor',
+            'instructor',
             'students',
             'active',
             'active_session'

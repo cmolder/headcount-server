@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.core.validators import RegexValidator
@@ -67,6 +68,8 @@ class Student(models.Model):
 
 
     ''' Student fields '''
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
+                                blank=True, null=True, default=None)
     student_id = models.CharField(max_length=9, validators=[numeric]) # Student ID
     name       = models.CharField(max_length=200)                     # First and last name
     year       = models.CharField(max_length=2, choices=YEAR_CHOICES, default='FR')
@@ -90,8 +93,10 @@ class Instructor(models.Model):
         ('NONE', '')
     ]
 
+    user  = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
+                                 blank=True, null=True, default=None)
     title = models.CharField(max_length=4, choices=TITLE_CHOICES, default='NONE')
-    name = models.CharField(max_length=200)
+    name  = models.CharField(max_length=200)
 
     def __str__(self):
         return f'{self.title} {self.name}'

@@ -14,14 +14,20 @@ import os
 import django_heroku
 import dj_database_url
 import dotenv
+import datetime
 
 
-''' Application definition '''
+''' 
+Application definition 
+'''
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'headcount-server.herokuapp.com']
 
-# Load environment variables from .env file (local) or from online database (Heroku)
+# Get database url from db.sqlite3 (local) if .env is present,
+# or Heroku Postgres (online) if .env is not present
+#
+# Other environment variables can be added, too
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
@@ -47,12 +53,6 @@ INSTALLED_APPS = [
     # Our packages
     'headcount_db',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -91,6 +91,30 @@ WSGI_APPLICATION = 'headcount_server.wsgi.application'
 CORS_ORIGIN_ALLOW_ALL = True
 
 
+
+'''
+REST API and authentication
+'''
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ]
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    'JWT_ALLOW_REFRESH': True,
+}
+
+
+
 ''' 
 Database 
 '''
@@ -102,8 +126,10 @@ DATABASES = {
     }
 }
 
+# Use DATABASE_URL based on Heroku (online) or .env file (local)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600) # Use DATABASE_URL based on Heroku (online) or .env file (local)
+
 
 ''' 
 Password validation 
@@ -125,15 +151,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 ''' 
 Internationalization
 https://docs.djangoproject.com/en/2.2/topics/i18n/
 '''
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Chicago'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = False
+USE_I18N  = True
+USE_L10N  = True
+USE_TZ    = False
+
 
 
 ''' 
@@ -153,6 +181,7 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
+
 '''
 Media files
 '''
@@ -160,8 +189,11 @@ MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL  = '/media/'
 
 
+
 '''
 Miscellaneous
 '''
 django_heroku.settings(locals())
 del DATABASES['default']['OPTIONS']['sslmode'] # SSL workaround when working locally
+
+APPEND_SLASH = False

@@ -42,13 +42,13 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = [
         'student_id',
         'name',
-        'year'
+        'year',
+        'user'
     ]
 
-    list_filter = ['year']
+    list_filter   = ['year']
+    ordering      = ['student_id']
     search_fields = ['name', 'student_id']
-
-    ordering = ['student_id']
 
 
 ''' Instructor admin '''
@@ -56,10 +56,12 @@ class InstructorAdmin(admin.ModelAdmin):
 
     list_display = [
         'title',
-        'name'
+        'name',
+        'user'
     ]
 
-    ordering = ['name']
+    ordering      = ['name']
+    search_fields = ['name']
 
 
 ''' Attendance transaction admin '''
@@ -71,9 +73,8 @@ class AttendanceTransactionAdmin(admin.ModelAdmin):
         'time'
     ]
 
-    list_filter = ['time']
-
-    ordering = ['session', 'time']
+    list_filter   = ['time']
+    ordering      = ['session', 'time']
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

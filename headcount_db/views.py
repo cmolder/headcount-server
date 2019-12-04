@@ -1,16 +1,26 @@
 from django.shortcuts import render
 
 from rest_framework import generics
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import *
 from .serializers import *
 
 ''' Classroom API views'''
 class ListClassroom(generics.ListCreateAPIView):
+
+    ''' TO WORK WITHOUT LOGIN, SIMPLY REMOVE THIS LINE :) '''
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
-    serializer_class = ClassroomSeralizer
+
 
 class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ClassroomSeralizer
+    serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
 
 
@@ -60,9 +70,9 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         attendance transactions to those associated with sessions 
         of Classroom with the given Django ID. [ NOT classroom's class_code!! ]
 
-        student - (optional) restricts the returned
-        attendance transactions to those associated with the Student
-        with the given Django ID. [ NOT student's student_id!! ]
+        X student - (optional) restricts the returned
+        X attendance transactions to those associated with the Student
+        X with the given Django ID. [ NOT student's student_id!! ]
 
         student_id - (optional) restricts the returned
         attendance transactions to those associated with the Student
@@ -75,14 +85,10 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 
         classroom  = self.request.query_params.get('classroom', None)
         student_id = self.request.query_params.get('student_id', None)
-
         date       = self.request.query_params.get('date', None)
 
         if classroom is not None:
             queryset = queryset.filter(session__classroom__id = classroom)
-
-        if student is not None:
-            queryset = queryset.filter(student__id = student)
 
         if student_id is not None:
             queryset = queryset.filter(student__student_id = student_id)
