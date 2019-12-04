@@ -89,7 +89,16 @@ class ListInstructor(generics.ListCreateAPIView):
     serializer_class = InstructorSerializer
 
     def get_queryset(self):
+        '''
+        is_user - (optional) restricts the returned Instructors to the
+        one associated with the currently signed-in user
+        '''
         queryset = Instructor.objects.all()
+        is_user  = self.request.query_params.get('is_user', 'False')
+
+        if is_user == 'True':
+            user = self.request.user
+            queryset = queryset.filter(user = user)
 
         return queryset
 
