@@ -9,11 +9,16 @@ urlpatterns = [
     # Student API endpoints
     path('student', views.ListStudent.as_view()),            # Gets all Student objects (with optional filters)
     path('student/<int:pk>', views.DetailStudent.as_view()), # Gets Student with provided Django ID
+    
+    # Instructor API endpoints
+    path('instructor', views.ListInstructor.as_view()),            # Gets all Student objects (with optional filters)
+    path('instructor/<int:pk>', views.DetailInstructor.as_view()), # Gets Student with provided Django ID
 
     # Attendance transaction API endpoints
     path('attendance', views.ListAttendanceTransaction.as_view()),            # Gets all AttendanceTransaction objects (with optional filters)
     path('attendance/<int:pk>', views.DetailAttendanceTransaction.as_view()), # Gets AttendanceTransaction with provided Django ID
 
+    # Classroom session API endpoints
     path('session', views.ListClassroomSession.as_view()),           # Gets all ClassroomSession objects (with optional filters)
     path('session/<int:pk>', views.DetailClassroomSession.as_view()) # Gets ClassroomSession with provided Django ID
 
