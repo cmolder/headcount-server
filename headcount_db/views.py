@@ -12,20 +12,54 @@ from .serializers import *
 ''' Classroom API views'''
 class ListClassroom(generics.ListCreateAPIView):
 
-    ''' TO WORK WITHOUT LOGIN, SIMPLY REMOVE THIS LINE :) '''
+    # TO WORK WITHOUT LOGIN, SIMPLY REMOVE THIS LINE :)
     permission_classes = [IsAuthenticated]
-
     serializer_class = ClassroomSerializer
-    queryset = Classroom.objects.all()
+
+    # Get all classrooms where the user is an Instructor
+    def get_queryset(self):
+        '''
+        is_instructor - filters the returned Classrooms to the ones
+        where the user is the Instructor
+
+        is_student - filters the returned Classrooms to the ones
+        where the user is a Student on the roster
+
+        One of the two filters is required, otherwise the
+        query returns an empty array
+        '''
+
+        queryset = Classroom.objects.all()
+        user     = self.request.user
+
+        is_instructor = self.request.query_params.get('is_instructor', 'False')
+        is_student    = self.request.query_params.get('is_student', 'False')
+
+        if is_instructor == 'True':
+            queryset = queryset.filter(instructor__user = user)
+
+        if is_student == 'True':
+            studentset = Student.objects.filter(user = user)
+            queryset = queryset.filter(students__in = studentset)
+
+        if is_student != 'True' and is_instructor != 'True':
+            queryset = Classroom.objects.none()
+
+        return queryset
+
+
+    
 
 
 class DetailClassroom(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
 
 
 ''' Student API views '''
 class ListStudent(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentSerializer
 
     def get_queryset(self):
@@ -41,13 +75,17 @@ class ListStudent(generics.ListCreateAPIView):
 
         return queryset
 
+    
+
 class DetailStudent(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentSerializer
     queryset = Student.objects.all()
 
 
 ''' Instructor API views '''
 class ListInstructor(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = InstructorSerializer
 
     def get_queryset(self):
@@ -56,12 +94,14 @@ class ListInstructor(generics.ListCreateAPIView):
         return queryset
 
 class DetailInstructor(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = InstructorSerializer
     queryset = Instructor.objects.all()
 
 
 ''' Attendance transaction API views '''
 class ListAttendanceTransaction(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AttendanceTransactionSerializer
 
     def get_queryset(self):
@@ -99,12 +139,14 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         return queryset
 
 class DetailAttendanceTransaction(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AttendanceTransactionSerializer
     queryset = AttendanceTransaction.objects.all()
 
 
 ''' Classroom session API views '''
 class ListClassroomSession(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ClassroomSessionSerializer
 
     def get_queryset(self):
@@ -130,5 +172,6 @@ class ListClassroomSession(generics.ListAPIView):
         return queryset
 
 class DetailClassroomSession(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ClassroomSessionSerializer
     queryset = ClassroomSession.objects.all()

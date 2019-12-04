@@ -122,7 +122,7 @@ Database
 
 DATABASES = {
     'default': {
-        
+
     }
 }
 
