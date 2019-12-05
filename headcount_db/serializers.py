@@ -67,5 +67,6 @@ class ClassroomSerializer(serializers.ModelSerializer):
             'name',
             'instructor',
             'students',
+            'active',
             'active_session',
         )
