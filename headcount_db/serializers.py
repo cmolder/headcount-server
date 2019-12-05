@@ -56,7 +56,7 @@ class ClassroomSessionSerializer(serializers.ModelSerializer):
 
 class ClassroomSerializer(serializers.ModelSerializer):
     
-    active_session = ClassroomSessionSerializer()
+    active_session = ClassroomSessionSerializer(read_only = True)
 
     class Meta:
         model = Classroom
