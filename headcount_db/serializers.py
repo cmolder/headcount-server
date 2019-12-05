@@ -3,20 +3,6 @@
 from rest_framework import serializers
 from .models import *
 
-class ClassroomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Classroom
-        fields = (
-            'id',
-            'department',
-            'number',
-            'name',
-            'instructor',
-            'students',
-            'active',
-            'active_session'
-        )
-
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -66,4 +52,20 @@ class ClassroomSessionSerializer(serializers.ModelSerializer):
             'class_code',
             'start',
             'end'
+        )
+
+class ClassroomSerializer(serializers.ModelSerializer):
+    
+    active_session = ClassroomSessionSerializer()
+
+    class Meta:
+        model = Classroom
+        fields = (
+            'id',
+            'department',
+            'number',
+            'name',
+            'instructor',
+            'students',
+            'active_session',
         )
