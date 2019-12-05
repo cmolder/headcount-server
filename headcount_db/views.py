@@ -78,7 +78,7 @@ class ListStudent(generics.ListCreateAPIView):
             queryset = queryset.filter(student_id = student_id)
         if is_user == 'True':
             user = self.request.user
-            queryset.filter(user = user)
+            queryset = queryset.filter(user = user)
 
         return queryset
 
