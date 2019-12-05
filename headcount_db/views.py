@@ -66,12 +66,19 @@ class ListStudent(generics.ListCreateAPIView):
         '''
         student_id - (optional) restricts the returned Students to the one
         with the given nine-digit student ID
+
+        is_user - (optional) restricts the returned Student to the
+        one associated with the currently signed-in user
         '''
         queryset = Student.objects.all()
+        is_user = self.request.query_params.get('is_user', 'False')
         student_id = self.request.query_params.get('student_id', None)
 
         if student_id is not None:
             queryset = queryset.filter(student_id = student_id)
+        if is_user == 'True':
+            user = self.request.user
+            queryset.filter(user = user)
 
         return queryset
 
@@ -121,10 +128,6 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
 
         session - (optional) resticts the returned attendance transactions
         to those associtaed with the ClassroomSession with the given Django ID.
-
-        X student - (optional) restricts the returned
-        X attendance transactions to those associated with the Student
-        X with the given Django ID. [ NOT student's student_id!! ]
 
         student_id - (optional) restricts the returned
         attendance transactions to those associated with the Student

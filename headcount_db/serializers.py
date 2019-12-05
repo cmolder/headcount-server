@@ -8,6 +8,7 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = (
             'id',
+            'user',
             'student_id',
             'name',
             'year',
@@ -17,6 +18,7 @@ class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instructor
         fields = (
+            'id',
             'user',
             'name',
             'title'
