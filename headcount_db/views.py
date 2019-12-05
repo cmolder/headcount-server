@@ -119,6 +119,9 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         attendance transactions to those associated with sessions 
         of Classroom with the given Django ID. [ NOT classroom's class_code!! ]
 
+        session - (optional) resticts the returned attendance transactions
+        to those associtaed with the ClassroomSession with the given Django ID.
+
         X student - (optional) restricts the returned
         X attendance transactions to those associated with the Student
         X with the given Django ID. [ NOT student's student_id!! ]
@@ -133,11 +136,15 @@ class ListAttendanceTransaction(generics.ListCreateAPIView):
         queryset   = AttendanceTransaction.objects.all()
 
         classroom  = self.request.query_params.get('classroom', None)
+        session    = self.request.query_params.get('session', None)
         student_id = self.request.query_params.get('student_id', None)
         date       = self.request.query_params.get('date', None)
 
         if classroom is not None:
             queryset = queryset.filter(session__classroom__id = classroom)
+
+        if session is not None:
+            queryset = queryset.filter(session = session)
 
         if student_id is not None:
             queryset = queryset.filter(student__student_id = student_id)
