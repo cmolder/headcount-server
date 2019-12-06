@@ -1,6 +1,7 @@
 # headcount_db/serializers.py
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from .models import *
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -33,7 +34,7 @@ class AttendanceTransactionSerializer(serializers.ModelSerializer):
         session = data['session']
 
         if student not in session.classroom.students.all():
-            raise serializers.ValidationError(f'{student} is not on the roster for {session.classroom}')
+            raise serializers.ValidationError('The student is not on the roster for the classroom.')
         return data
     
     class Meta:
@@ -44,8 +45,15 @@ class AttendanceTransactionSerializer(serializers.ModelSerializer):
             'student',
             'time'
         )
+        validators = [
+            UniqueTogetherValidator(
+                queryset = AttendanceTransaction.objects.all(),
+                fields = ['session', 'student']
+            )
+        ]
 
 class ClassroomSessionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ClassroomSession
         fields = (
@@ -57,9 +65,8 @@ class ClassroomSessionSerializer(serializers.ModelSerializer):
         )
 
 class ClassroomSerializer(serializers.ModelSerializer):
+    active_session = ClassroomSessionSerializer()
     
-    active_session = ClassroomSessionSerializer(read_only = True)
-
     class Meta:
         model = Classroom
         fields = (
